@@ -10,6 +10,7 @@ header-includes: \usepackage{float}
 ```{r setup, echo=F, message=F, warning=F}
 require(pander)
 require(clusterSim)
+require(ca)
 ```
 
 
@@ -86,6 +87,7 @@ contingency <- rbind(c(table(hc3), "-"),table(kc4$cluster))
 colnames(contingency) <- 1:4
 rownames(contingency) <- c("Ward's", "KMeans")
 pander(contingency)
+
 ```
 
 5) _Perform a correspondence analysis of the contingency table using the ca function from the ca package and discuss the results. Make sure to discuss the quality of the display and interpret all three aspects of the information provided in the plot in the context. Note: if the two solutions perfectly agree, select a different number of clusters for one of the two cluster analyses even if it isn't optimal._
