@@ -68,8 +68,13 @@ plot(1:10, G1s, type = "l", ylab = "G1 Index", xlab = "Number of clusters")
 
 ```{r p4_a, echo=F, comment=NA, fig.pos="H", fig.align="center", cache=T, size="footnotesize"}
 
-kmeans(tc2, centers=4)
+kc4 <- kmeans(tc2, centers=4)
+hc3 <- cutree(hc.wd2, 3)
 
+contingency <- rbind(c(table(hc3), "-"),table(kc4$cluster))
+colnames(contingency) <- 1:4
+rownames(contingency) <- c("Ward's", "KMeans")
+pander(contingency)
 ```
 
 5) _Perform a correspondence analysis of the contingency table using the ca function from the ca package and discuss the results. Make sure to discuss the quality of the display and interpret all three aspects of the information provided in the plot in the context. Note: if the two solutions perfectly agree, select a different number of clusters for one of the two cluster analyses even if it isn't optimal._
