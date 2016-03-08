@@ -70,7 +70,7 @@ not appear that
 
 ```{r p3_a, echo=F, message=F, comment=NA, fig.pos="H", fig.align="center", cache=T, size="tiny"}
 
-kc4 <- kmeans(tc2, centers=4)
+kc3 <- kmeans(tc2, centers=3)
 
 ```
 
