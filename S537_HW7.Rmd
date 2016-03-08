@@ -9,6 +9,7 @@ header-includes: \usepackage{float}
 
 ```{r setup, echo=F, message=F, warning=F}
 require(pander)
+require(clusterSim)
 ```
 
 
@@ -37,7 +38,11 @@ corrplot_mg(cor1,order="hclust",tl.pos="lt")
 
 
 ```{r p1_a, echo=F, warning=F, message=F, cache=T, fig.height=8, fig.width=8}
+# standardized?
+hc.wd2 <- hclust(dist(tc2), "ward.D2")
 
+# looks ugly even with labels suppressed.
+plot(hc.wd2, labels=F, xlab=NULL)
 ```
 
 2) _Assess the potential optimal number of clusters using the Calinski-Harabasz G1 measure (make a plot), considering 2 to 20 clusters. Discuss the results._
@@ -49,6 +54,11 @@ corrplot_mg(cor1,order="hclust",tl.pos="lt")
 
 ```{r p3_a, echo=F, message=F, comment=NA, fig.pos="H", fig.align="center", cache=T, size="tiny"}
 
+G1s <- numeric(0)
+for(j in 1:10){G1s[j] <- index.G1(x=tc2,cl=cutree(hc.wd2,j))}
+
+plot(1:10, G1s, type = "l", ylab = "G1 Index", xlab = "Number of clusters")
+
 ```
 
 
@@ -57,6 +67,8 @@ corrplot_mg(cor1,order="hclust",tl.pos="lt")
 
 
 ```{r p4_a, echo=F, comment=NA, fig.pos="H", fig.align="center", cache=T, size="footnotesize"}
+
+kmeans(tc2, centers=4)
 
 ```
 
