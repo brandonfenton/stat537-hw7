@@ -1,0 +1,160 @@
+---
+title: 'Stat 537: Homework 7'
+author: "Brandon Fenton and Kenny Flagg"
+date: "Due Friday, March 11"
+output: pdf_document
+header-includes: \usepackage{float}
+---
+
+
+```{r setup, echo=F, message=F, warning=F}
+require(pander)
+```
+
+
+```{r p0_a, echo=T, warning=F, message=F, cache=T, fig.height=10, fig.width=10}
+tc1<-read.csv("https://montana.box.com/shared/static/m5tv7r4ce7mw3w0vyqu0q7i1f8jflkkc.csv",header=T) #Data set without any modifications from https://knb.ecoinformatics.org/#view/doi:10.5063/F1DZ067F
+tc1$responsef<-factor(tc1$response)
+tc1_r<-tc1[,c(4:39,64:75)]
+
+table(tc1_r$pack7)
+## 
+##         0 0.4916059 
+##      2544         1
+table(tc1_r$pack8)
+## 
+##          0 0.02702319 0.08039794 
+##       2543          1          1
+tc2<-tc1_r[,-c(43,44)]
+cor1<-cor(tc2)
+
+require(corrplot)
+source("https://montana.box.com/shared/static/7ydjuwpraqpuovf7r1ovorsp828ckzs0.r")
+corrplot_mg(cor1,order="hclust",tl.pos="lt")
+```
+1 _For the standardized (Q=46) variables in the data set tc2, perform a hierarchical cluster analysis of the observations using Ward's agglomeration method and Euclidean distance. Display a dendrogram and discuss the number of clusters you might think are reasonable based on this result._
+
+
+
+```{r p1_a, echo=F, warning=F, message=F, cache=T, fig.height=8, fig.width=8}
+
+```
+
+2) _Assess the potential optimal number of clusters using the Calinski-Harabasz G1 measure (make a plot), considering 2 to 20 clusters. Discuss the results._
+```{r p2_a, echo=F, comment=NA, fig.height=3, fig.pos="H", fig.align="center", cache=T, size="sripctsize"}
+
+```
+
+3) _3 Now perform k-means cluster analysis on the standardized Q=46 data set and provide a plot of the ESS measure vs number of clusters for 2 to 20 clusters. Discuss the results and suggest a choice of clusters based on these results._
+
+```{r p3_a, echo=F, message=F, comment=NA, fig.pos="H", fig.align="center", cache=T, size="tiny"}
+
+```
+
+
+
+4) _Use G1 to pick the optimal number of clusters for kmeans and make a contingency table of the clusters identified from the optimal sized kmeans solution compared to the optimal selection from Ward's from question 2. Discuss the results. The optimal number of clusters need not agree for the two different algorithms._
+
+
+```{r p4_a, echo=F, comment=NA, fig.pos="H", fig.align="center", cache=T, size="footnotesize"}
+
+```
+
+5) _Perform a correspondence analysis of the contingency table using the ca function from the ca package and discuss the results. Make sure to discuss the quality of the display and interpret all three aspects of the information provided in the plot in the context. Note: if the two solutions perfectly agree, select a different number of clusters for one of the two cluster analyses even if it isn't optimal._
+
+```{r p5_a, echo=F, comment=NA, fig.pos="H", fig.align="center", cache=T, size="footnotesize", fig.height=5, fig.width=10}
+
+```
+
+
+6) _In the original data set, the variable "response" is the presence (1) or absence (0) of white bark pine in each location. Make contingency tables of each of your cluster solutions with this variable, make the related side-by-side barcharts (try something like plot(tc1cluster))), and discuss whether some or all of your clusters seem to be related to the presence or absence of white bark pine._
+
+```{r, warning=F,message=F, echo=F}
+
+``` 
+
+
+```{r p6_a, warning=F,message=F, echo=F}
+
+```
+
+```{r p6_b, warning=F, message=F, echo=F}
+
+```  
+
+
+
+7) _Plot your preferred cluster solution spatially using latitude and longitude (in other words plot lat~lon and add symbols and colors for the sites based on the cluster IDs). Discuss whether there appears to be spatial structure to the clusters. No tests, just a visual assessment based on the plot. You could talk about where each cluster tended to be located. To help with your visual assessment, you can permute the cluster labels using something like the following applied a vector of cluster labels called v1: require(mosaic) v1p<-shuffle(v1)_
+
+```{r p7_a, echo=F, comment=NA, message=FALSE, fig.pos="H", fig.align="center", cache=T, size="footnotesize"}
+
+
+```
+
+```{r p7_b, echo=F, comment=NA, message=FALSE, fig.pos="H", fig.align="center", cache=T, size="footnotesize", fig.height=4, fig.width=10}
+
+```
+
+8) _Run the following code and explain the resulting plot. What is being displayed and what does it show?_ 
+
+
+```{r p8_a, echo=F, comment=NA, message=FALSE, fig.pos="H", fig.align="center", cache=T, size="footnotesize"}
+d1<-dist(t(scale(tc2))) 
+d1_a<-sqrt(2*(1-(cor1))) 
+plot(as.matrix(d1)~as.matrix(d1_a))
+
+```
+
+# R Code Appendix:
+
+Loading Data:
+```{r a0, ref.label='p0_a', eval=F}
+```
+
+Problem 1:
+```{r a1, ref.label='p1_a', eval=F}
+```
+
+Problem 2:
+```{r a2, ref.label='p2_a', eval=F}
+```
+
+Problem 3:
+```{r a3, ref.label='p3_a', eval=F}
+```
+
+Problem 4:
+```{r a4, ref.label='p4_a', eval=F}
+```
+
+Problem 5:
+```{r a5, ref.label='p5_a', eval=F}
+```
+
+Problem 6:
+```{r a6, ref.label='p5_a', eval=F}
+```
+
+```{r a6b, ref.label='p5_b', eval=F}
+```
+
+Problem 7:
+```{r a7, ref.label='p7_a', eval=F}
+```
+```{r b7, ref.label='p7_b', eval=F}
+```
+
+<!--- ### About This Markdown File
+
+  * File creation date: `r Sys.Date()`
+  * `r R.version.string`
+  * R version (short form): `r getRversion()`
+  * Additional session information
+  
+```{r echo=FALSE}
+sessionInfo()  # could use devtools::session_info() if you prefer that
+```
+-->
+
+
+
