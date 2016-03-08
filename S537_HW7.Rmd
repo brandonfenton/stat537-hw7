@@ -40,30 +40,36 @@ corrplot_mg(cor1,order="hclust",tl.pos="lt")
 ```{r p1_a, echo=F, warning=F, message=F, cache=T, fig.height=8, fig.width=8}
 # standardized?
 tc2.std <- scale(tc2)
-hc.std <- hclust(dist(tc2.std), "ward.D2")
+hc.wd2 <- hclust(dist(tc2.std), "ward.D2")
 
-#hc.wd2 <- hclust(dist(tc2), "ward.D2")
 
 # looks ugly even with labels suppressed.
-plot(hc.std, labels=F, xlab=NULL)
+plot(hc.wd2, labels=F, xlab=NULL)
 ```
 
-Based on the dendrogram, we would choose the three cluster solution.
+Based on the dendrogram, we would cut the tree at a height of 150 and
+choose the three cluster solution. All splits lower down the tree occur
+relatively close together so there is little support for a larger number
+of clusters.
 
 2) _Assess the potential optimal number of clusters using the Calinski-Harabasz G1 measure (make a plot), considering 2 to 20 clusters. Discuss the results._
 ```{r p2_a, echo=F, comment=NA, fig.height=3, fig.pos="H", fig.align="center", cache=T, size="sripctsize"}
-G1.wd2 <- numeric(0)
-for(j in 1:10){G1.wd2[j] <- index.G1(x=tc2,cl=cutree(hc.std,j))}
+G1s <- numeric(0)
+for(j in 1:20){G1s[j] <- index.G1(x=tc2,cl=cutree(hc.wd2,j))}
+
+plot(1:20, G1s, type = "l", ylab = "G1 Index", xlab = "Number of clusters", xaxt="n")
+axis(1, at=seq(2, 20, 2))
 ```
 
-3) _3 Now perform k-means cluster analysis on the standardized Q=46 data set and provide a plot of the ESS measure vs number of clusters for 2 to 20 clusters. Discuss the results and suggest a choice of clusters based on these results._
+The G1 Index is maximized by the three cluster solution. The maximum is
+noticeably higher than the value of the index for two clusters, so it does
+not appear that 
+
+3) _Now perform k-means cluster analysis on the standardized Q=46 data set and provide a plot of the ESS measure vs number of clusters for 2 to 20 clusters. Discuss the results and suggest a choice of clusters based on these results._
 
 ```{r p3_a, echo=F, message=F, comment=NA, fig.pos="H", fig.align="center", cache=T, size="tiny"}
 
-G1s <- numeric(0)
-for(j in 1:10){G1s[j] <- index.G1(x=tc2,cl=cutree(hc.std,j))}
-
-plot(1:10, G1s, type = "l", ylab = "G1 Index", xlab = "Number of clusters")
+kc4 <- kmeans(tc2, centers=4)
 
 ```
 
@@ -74,7 +80,6 @@ plot(1:10, G1s, type = "l", ylab = "G1 Index", xlab = "Number of clusters")
 
 ```{r p4_a, echo=F, comment=NA, fig.pos="H", fig.align="center", cache=T, size="footnotesize"}
 
-kc4 <- kmeans(tc2, centers=4)
 hc3 <- cutree(hc.wd2, 3)
 
 contingency <- rbind(c(table(hc3), "-"),table(kc4$cluster))
