@@ -62,9 +62,11 @@ plot(1:20, G1s, type = "l", ylab = "G1 Index", xlab = "Number of clusters", xaxt
 axis(1, at=seq(2, 20, 2))
 ```
 
-The G1 Index is maximized by the three cluster solution. The maximum is
-noticeably higher than the value of the index for two clusters, so it does
-not appear that 
+The G1 Index is maximized by the three cluster solution, agreeing with our
+decision from the dendrogram. The maximum is
+noticeably higher than the value of the index for any other number of
+clusters, so the three cluster solution is well supported
+not appear that
 
 3) _Now perform k-means cluster analysis on the standardized Q=46 data set and provide a plot of the ESS measure vs number of clusters for 2 to 20 clusters. Discuss the results and suggest a choice of clusters based on these results._
 
