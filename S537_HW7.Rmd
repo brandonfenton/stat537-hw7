@@ -39,15 +39,21 @@ corrplot_mg(cor1,order="hclust",tl.pos="lt")
 
 ```{r p1_a, echo=F, warning=F, message=F, cache=T, fig.height=8, fig.width=8}
 # standardized?
-hc.wd2 <- hclust(dist(tc2), "ward.D2")
+tc2.std <- scale(tc2)
+hc.std <- hclust(dist(tc2.std), "ward.D2")
+
+#hc.wd2 <- hclust(dist(tc2), "ward.D2")
 
 # looks ugly even with labels suppressed.
-plot(hc.wd2, labels=F, xlab=NULL)
+plot(hc.std, labels=F, xlab=NULL)
 ```
+
+Based on the dendrogram, we would choose the three cluster solution.
 
 2) _Assess the potential optimal number of clusters using the Calinski-Harabasz G1 measure (make a plot), considering 2 to 20 clusters. Discuss the results._
 ```{r p2_a, echo=F, comment=NA, fig.height=3, fig.pos="H", fig.align="center", cache=T, size="sripctsize"}
-
+G1.wd2 <- numeric(0)
+for(j in 1:10){G1.wd2[j] <- index.G1(x=tc2,cl=cutree(hc.std,j))}
 ```
 
 3) _3 Now perform k-means cluster analysis on the standardized Q=46 data set and provide a plot of the ESS measure vs number of clusters for 2 to 20 clusters. Discuss the results and suggest a choice of clusters based on these results._
@@ -55,7 +61,7 @@ plot(hc.wd2, labels=F, xlab=NULL)
 ```{r p3_a, echo=F, message=F, comment=NA, fig.pos="H", fig.align="center", cache=T, size="tiny"}
 
 G1s <- numeric(0)
-for(j in 1:10){G1s[j] <- index.G1(x=tc2,cl=cutree(hc.wd2,j))}
+for(j in 1:10){G1s[j] <- index.G1(x=tc2,cl=cutree(hc.std,j))}
 
 plot(1:10, G1s, type = "l", ylab = "G1 Index", xlab = "Number of clusters")
 
