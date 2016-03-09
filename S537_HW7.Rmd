@@ -59,7 +59,7 @@ plot(1:20, G1s, type = "l", ylab = "G1 Index", xlab = "Number of clusters", xaxt
 axis(1, at=seq(2, 20, 2))
 ```
 
-The G1 Index is maximized by the two cluster solution, disagreeing with our decision based on the dendrogram. The two cluster solution does the best job of partitioning . The index decreases monotonically as the number of clusters increases. This suggests that the data may be best described by one single cluster, but we cannot include the one cluster solution in the comparison because G1 Index is undefined for one cluster.
+The G1 Index is maximized by the two cluster solution, disagreeing with our decision based on the dendrogram. The index decreases monotonically as the number of clusters increases. The two cluster solution does the best job of maximizing between-cluster variability, but we cannot be sure that there really are clusters present because the G1 Index is undefined for one cluster.
 
 3) _Now perform k-means cluster analysis on the standardized Q=46 data set and provide a plot of the ESS measure vs number of clusters for 2 to 20 clusters. Discuss the results and suggest a choice of clusters based on these results._
 
@@ -72,7 +72,7 @@ plot(1:20, ESS, type = "l", ylab = "ESS", xlab = "Number of clusters", xaxt="n")
 axis(1, at=seq(2, 20, 2))
 ```
 
-ESS decreases each time the number of clusters is increased. The elbow of the plot occurs at 3 three clusters, suggesting that 
+ESS decreases each time the number of clusters is increased. The elbow of the plot occurs at 3 three clusters, suggesting that 3 clusters
 
 4) _Use G1 to pick the optimal number of clusters for kmeans and make a contingency table of the clusters identified from the optimal sized kmeans solution compared to the optimal selection from Ward's from question 2. Discuss the results. The optimal number of clusters need not agree for the two different algorithms._
 
