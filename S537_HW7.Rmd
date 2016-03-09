@@ -14,16 +14,16 @@ require(ca)
 ```
 
 
-```{r p0_a, echo=T, warning=F, message=F, cache=T, fig.height=10, fig.width=10}
+```{r p0_a, echo=F, warning=F, message=F, cache=T, fig.height=10, fig.width=10, fig.align='center'}
 tc1<-read.csv("https://montana.box.com/shared/static/m5tv7r4ce7mw3w0vyqu0q7i1f8jflkkc.csv",header=T) #Data set without any modifications from https://knb.ecoinformatics.org/#view/doi:10.5063/F1DZ067F
 tc1$responsef<-factor(tc1$response)
 tc1_r<-tc1[,c(4:39,64:75)]
 
-table(tc1_r$pack7)
+#table(tc1_r$pack7)
 ## 
 ##         0 0.4916059 
 ##      2544         1
-table(tc1_r$pack8)
+#table(tc1_r$pack8)
 ## 
 ##          0 0.02702319 0.08039794 
 ##       2543          1          1
@@ -34,13 +34,14 @@ require(corrplot)
 source("https://montana.box.com/shared/static/7ydjuwpraqpuovf7r1ovorsp828ckzs0.r")
 corrplot_mg(cor1,order="hclust",tl.pos="lt")
 ```
+
+\pagebreak
 1 _For the standardized (Q=46) variables in the data set tc2, perform a hierarchical cluster analysis of the observations using Ward's agglomeration method and Euclidean distance. Display a dendrogram and discuss the number of clusters you might think are reasonable based on this result._
 
-```{r p1_a, echo=F, warning=F, message=F, cache=T, fig.height=8, fig.width=8}
+```{r p1_a, echo=F, warning=F, message=F, cache=T, fig.height=6, fig.width=10, fig.align='center'}
 # standardized?
 tc2.std <- scale(tc2)
 hc.wd2 <- hclust(dist(tc2.std), "ward.D2")
-
 
 # looks ugly even with labels suppressed.
 plot(hc.wd2, labels=F, xlab=NULL)
@@ -50,7 +51,8 @@ rect.hclust(hc.wd2, k=3)
 Based on the dendrogram, we would cut the tree at a height of 150 and choose the three cluster solution. All splits lower down the tree occur relatively close together so there is little that additional splits produce clusters that are truly different.
 
 2) _Assess the potential optimal number of clusters using the Calinski-Harabasz G1 measure (make a plot), considering 2 to 20 clusters. Discuss the results._
-```{r p2_a, echo=F, comment=NA, fig.pos="H", fig.align="center", cache=T}
+
+```{r p2_a, echo=F, comment=NA, fig.pos="H", fig.align="center", cache=T, fig.width=7, fig.height=5, out.width="0.7\\textwidth"}
 G1s <- numeric(20)
 for(j in 1:20){G1s[j] <- index.G1(x=tc2.std,cl=cutree(hc.wd2,j))}
 
@@ -62,8 +64,7 @@ The G1 Index is maximized by the two cluster solution, which scores slightly hig
 
 3) _Now perform k-means cluster analysis on the standardized Q=46 data set and provide a plot of the ESS measure vs number of clusters for 2 to 20 clusters. Discuss the results and suggest a choice of clusters based on these results._
 
-```{r p3_a, echo=F, message=F, warning=F, comment=NA, fig.pos="H", fig.align="center", cache=T, size="tiny"}
-
+```{r p3_a, echo=F, message=F, warning=F, comment=NA, fig.pos="H", fig.align="center", cache=T, fig.height=5, fig.width=7, out.width="0.7\\textwidth"}
 ESS <- numeric(20)
 for(j in 1:20){ESS[j] <- kmeans(tc2.std, centers=j, iter.max=50, nstart=50)$tot.withinss}
 
@@ -75,8 +76,7 @@ ESS decreases each time the number of clusters is increased. The elbow of the pl
 
 4) _Use G1 to pick the optimal number of clusters for kmeans and make a contingency table of the clusters identified from the optimal sized kmeans solution compared to the optimal selection from Ward's from question 2. Discuss the results. The optimal number of clusters need not agree for the two different algorithms._
 
-
-```{r p4_a, echo=F, comment=NA, fig.pos="H", fig.align="center", cache=T, size="footnotesize"}
+```{r p4_a, echo=F, comment=NA, fig.pos="H", fig.align="center", cache=T, fig.height=5, fig.width=7, out.width="0.7\\textwidth"}
 G1.k <- numeric(20)
 for(j in 1:20){G1.k[j] <- index.G1(x=tc2.std,cl=kmeans(tc2.std, centers=j, iter.max=50, nstart=50)$cluster)}
 
@@ -106,7 +106,7 @@ Several differences between the clustering methods are apparent in the contingen
 
 The ca function from the ca package runs into errors when used on a table with two rows or two columns, so we instead consider the three cluster solutions since we chose these based on the dendrogram and ESS plot.
 
-```{r p5_a, echo=F, comment=NA, fig.pos="H", fig.align="center", cache=T, size="footnotesize"}
+```{r p5_a, echo=F, comment=NA, fig.pos="H", fig.align="center", fig.pos="H", fig.align="center", cache=T, fig.height=5, fig.width=7, out.width="0.7\\textwidth"}
 contingency3 <- table("Kmeans" = kc3$cluster, "Ward's" = hc3)
 colnames(contingency3) <- paste("Ward Cluster", 1:3)
 rownames(contingency3) <- paste("kmeans Cluster", 1:3)
@@ -249,6 +249,3 @@ Problem 8:
 sessionInfo()  # could use devtools::session_info() if you prefer that
 ```
 -->
-
-
-
