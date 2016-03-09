@@ -73,7 +73,7 @@ plot(1:20, ESS, type = "l", ylab = "ESS", xlab = "Number of clusters", xaxt="n")
 axis(1, at=seq(2, 20, 2))
 ```
 
-ESS decreases each time the number of clusters is increased. The elbow of the plot occurs at 3 three clusters, suggesting that 3 clusters
+ESS decreases each time the number of clusters is increased. The elbow of the plot occurs at 3 three clusters, suggesting that 3 clusters do a good job of describing the variation of the observations about the cluster means while additional clusters offer little improvement.
 
 4) _Use G1 to pick the optimal number of clusters for kmeans and make a contingency table of the clusters identified from the optimal sized kmeans solution compared to the optimal selection from Ward's from question 2. Discuss the results. The optimal number of clusters need not agree for the two different algorithms._
 
@@ -94,7 +94,9 @@ kc4 <- kmeans(tc2.std, centers=4, nstart=50)
 
 hc3 <- cutree(hc.wd2, 3)
 
-contingency <- table(kc4$cluster, hc3)
+contingency <- table("Kmeans" = kc3$cluster, "Ward's" = hc3)
+colnames(contingency) <- paste("Ward Cluster", 1:3)
+rownames(contingency) <- paste("kmeans Cluster", 1:3)
 
 pander(contingency)
 
@@ -160,8 +162,10 @@ legend(x=-108.6, y=45, legend=1:3, pch=20,
 d1<-dist(t(scale(tc2)))
 d1_a<-sqrt(2*(1-(cor1))) 
 plot(as.matrix(d1)~as.matrix(d1_a))
-
+```
+```{r p8_b, echo=F, comment=NA, message=FALSE, fig.pos="H", fig.align="center", cache=T, size="footnotesize"}
 d.lm <- lm(as.vector(as.matrix(d1))~as.vector(as.matrix(d1_a)))
+summary(d.lm)
 ```
 
 # R Code Appendix:
@@ -201,6 +205,12 @@ Problem 7:
 ```{r a7, ref.label='p7_a', eval=F}
 ```
 ```{r b7, ref.label='p7_b', eval=F}
+```
+
+Problem 8:
+```{r a8, ref.label='p8_a', eval=F}
+```
+```{r b8, ref.label='p8_b', eval=F}
 ```
 
 <!--- ### About This Markdown File
