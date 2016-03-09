@@ -48,32 +48,30 @@ hc.wd2 <- hclust(dist(tc2.std), "ward.D2")
 plot(hc.wd2, labels=F, xlab=NULL)
 ```
 
-Based on the dendrogram, we would cut the tree at a height of 150 and
-choose the three cluster solution. All splits lower down the tree occur
-relatively close together so there is little support for a larger number
-of clusters.
+Based on the dendrogram, we would cut the tree at a height of 150 and choose the three cluster solution. All splits lower down the tree occur relatively close together so there is little support for a larger number of clusters.
 
 2) _Assess the potential optimal number of clusters using the Calinski-Harabasz G1 measure (make a plot), considering 2 to 20 clusters. Discuss the results._
 ```{r p2_a, echo=F, comment=NA, fig.height=3, fig.pos="H", fig.align="center", cache=T, size="sripctsize"}
-G1s <- numeric(0)
-for(j in 1:20){G1s[j] <- index.G1(x=tc2,cl=cutree(hc.wd2,j))}
+G1s <- numeric(20)
+for(j in 1:20){G1s[j] <- index.G1(x=tc2.std,cl=cutree(hc.wd2,j))}
 
 plot(1:20, G1s, type = "l", ylab = "G1 Index", xlab = "Number of clusters", xaxt="n")
 axis(1, at=seq(2, 20, 2))
 ```
 
-The G1 Index is maximized by the three cluster solution, agreeing with our
-decision from the dendrogram. The maximum is
-noticeably higher than the value of the index for any other number of
-clusters, so the three cluster solution is well supported
-not appear that
+The G1 Index is maximized by the three cluster solution, agreeing with our decision based on the dendrogram. The maximum is noticeably higher than the value of the index for any other number of clusters, so the data support the conclusion that the three cluster solution is the best at partitioning the variation in the data. Also, since the G1 Index is much larger for three clusters than for two clusters, we are not concerned about the possibility that there really is only one cluster.
 
 3) _Now perform k-means cluster analysis on the standardized Q=46 data set and provide a plot of the ESS measure vs number of clusters for 2 to 20 clusters. Discuss the results and suggest a choice of clusters based on these results._
 
 ```{r p3_a, echo=F, message=F, comment=NA, fig.pos="H", fig.align="center", cache=T, size="tiny"}
 
-kc3 <- kmeans(tc2, centers=3)
+kc3 <- kmeans(tc2.std, centers=3, nstart=50)
 
+ESS <- numeric(20)
+for(j in 1:20){ESS[j] <- kmeans(tc2.std, centers=j, nstart=50)$tot.withinss}
+
+plot(1:20, ESS, type = "l", ylab = "ESS", xlab = "Number of clusters", xaxt="n")
+axis(1, at=seq(2, 20, 2))
 ```
 
 
