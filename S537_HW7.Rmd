@@ -81,9 +81,8 @@ ESS decreases each time the number of clusters is increased. The elbow of the pl
 
 hc3 <- cutree(hc.wd2, 3)
 
-contingency <- rbind(c(table(hc3), "-"),table(kc4$cluster))
-colnames(contingency) <- 1:4
-rownames(contingency) <- c("Ward's", "KMeans")
+contingency <- table(hc3, kc3$cluster)
+
 pander(contingency)
 
 ```
@@ -92,19 +91,23 @@ pander(contingency)
 
 ```{r p5_a, echo=F, comment=NA, fig.pos="H", fig.align="center", cache=T, size="footnotesize", fig.height=5, fig.width=10}
 
+clust.ca <- ca(contingency)
+
+plot(clust.ca)
 ```
 
 
 6) _In the original data set, the variable "response" is the presence (1) or absence (0) of white bark pine in each location. Make contingency tables of each of your cluster solutions with this variable, make the related side-by-side barcharts (try something like plot(tc1cluster))), and discuss whether some or all of your clusters seem to be related to the presence or absence of white bark pine._
 
-```{r, warning=F,message=F, echo=F}
+```{r p6_a, warning=F,message=F, echo=F}
+layout(rbind(c(1,2)))
+barplot(table(tc1$response, hc3), beside=T,
+        xlab="Hierarchical (Ward's)", ylab = "Frequency")
+barplot(table(tc1$response, kc3$cluster), beside=T,
+        xlab="KMeans", ylab = "Frequency")
 
 ``` 
 
-
-```{r p6_a, warning=F,message=F, echo=F}
-
-```
 
 ```{r p6_b, warning=F, message=F, echo=F}
 
@@ -116,6 +119,16 @@ pander(contingency)
 
 ```{r p7_a, echo=F, comment=NA, message=FALSE, fig.pos="H", fig.align="center", cache=T, size="footnotesize"}
 
+plot(tc1$lat~tc1$lon, type="n")
+
+col.vec <- character(length(hc3))
+
+alpha <- 0.6
+col.vec[hc3==1] <- rgb(0, 0, 1, alpha)
+col.vec[hc3==2] <- rgb(0, 1, 1, alpha)
+col.vec[hc3==3] <- rgb(1, 0, 1, alpha)
+
+points(x=tc1$lon, y=tc1$lat, pch=20, col=col.vec)
 
 ```
 
