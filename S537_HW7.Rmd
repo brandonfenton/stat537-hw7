@@ -117,6 +117,7 @@ clust.ca <- ca(contingency3)
 plot(clust.ca)
 ```
 
+The two axes describe 100\% of the inertia in the cluster labels so the two-dimensional representation is perfect. The kmeans cluster labels are dispersed throughout the plot, indicating that each kmeans cluster has its own unique pattern of membership in the Ward's method cluster. The Ward's labels are similarly spread out, which shows that their members differ with respect to membership in the clusters found by kmeans. The plot shows the kmeans and Ward's method cluster labels to be neatly paired up. Thus, the two algorithms resulted in similar clusters that capture essentially the same aspects of the data.
 
 6) _In the original data set, the variable "response" is the presence (1) or absence (0) of white bark pine in each location. Make contingency tables of each of your cluster solutions with this variable, make the related side-by-side barcharts (try something like plot(tc1cluster))), and discuss whether some or all of your clusters seem to be related to the presence or absence of white bark pine._
 
