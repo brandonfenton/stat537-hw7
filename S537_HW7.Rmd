@@ -84,7 +84,7 @@ plot(1:20, G1.k, type = "l", ylab = "G1 Index", xlab = "Number of clusters", xax
 axis(1, at=seq(2, 20, 2))
 ```
 
-For kmeans, G1 is once again maximized by the two cluster solution. The index descreases quickly as the number of clusters increases. If indeed there are multiple clusters present, G1 suggests there are two, but based on G1 alone we would be somewhat uncomfortable concluding that there are more than cluster.
+For KMeans, G1 is once again maximized by the two cluster solution. The index descreases quickly as the number of clusters increases. If indeed there are multiple clusters present, G1 suggests there are two, but based on G1 alone we would be somewhat uncomfortable concluding that there are more than cluster.
 
 ```{r p4_b, echo=F, comment=NA, fig.pos="H", fig.align="center", cache=T, size="footnotesize"}
 kc2 <- kmeans(tc2.std, centers=2, nstart=50)
@@ -93,23 +93,23 @@ kc3 <- kmeans(tc2.std, centers=3, nstart=50)
 hc2 <- cutree(hc.wd2, 2)
 hc3 <- cutree(hc.wd2, 3)
 
-contingency2 <- table("Kmeans" = kc2$cluster, "Ward's" = hc2)
+contingency2 <- table("KMeans" = kc2$cluster, "Ward's" = hc2)
 colnames(contingency2) <- paste("Ward's Cluster", 1:2)
-rownames(contingency2) <- paste("kmeans Cluster", 1:2)
+rownames(contingency2) <- paste("KMeans Cluster", 1:2)
 
 pander(addmargins(contingency2, FUN = list("Total" = sum), quiet = T))
 ```
 
-Several differences between the clustering methods are apparent in the contingency table. Ward's method placed almost two thirds of the observations in one cluster, while kmeans created clusters more balanced in size. The smaller cluster from Ward's method is essentially a subset of one of the kmeans clusters. Ward's method placed all of the remaining observations in a single cluster. Referring back to the dendrogram, the next split produced by Ward's method would partition this larger cluster into two roughly equally-sized clusters. This is very different from the kmeans approach, which tries to find the best solution given a number of clusters.
+Several differences between the clustering methods are apparent in the contingency table. Ward's method placed almost two thirds of the observations in one cluster, while KMeans created clusters more balanced in size. The smaller cluster from Ward's method is essentially a subset of one of the KMeans clusters. Ward's method placed all of the remaining observations in a single cluster. Referring back to the dendrogram, the next split produced by Ward's method would partition this larger cluster into two roughly equally-sized clusters. This is very different from the KMeans approach, which tries to find the best solution given a number of clusters.
 
 5) _Perform a correspondence analysis of the contingency table using the ca function from the ca package and discuss the results. Make sure to discuss the quality of the display and interpret all three aspects of the information provided in the plot in the context. Note: if the two solutions perfectly agree, select a different number of clusters for one of the two cluster analyses even if it isn't optimal._
 
 The ca function from the ca package runs into errors when used on a table with two rows or two columns, so we instead consider the three cluster solutions since we chose these based on the dendrogram and ESS plot.
 
 ```{r p5_a, echo=F, comment=NA, fig.pos="H", fig.align="center", fig.pos="H", fig.align="center", cache=T, fig.height=5, fig.width=7, out.width="0.7\\textwidth"}
-contingency3 <- table("Kmeans" = kc3$cluster, "Ward's" = hc3)
+contingency3 <- table("KMeans" = kc3$cluster, "Ward's" = hc3)
 colnames(contingency3) <- paste("Ward Cluster", 1:3)
-rownames(contingency3) <- paste("kmeans Cluster", 1:3)
+rownames(contingency3) <- paste("KMeans Cluster", 1:3)
 pander(addmargins(contingency3, FUN = list("Total" = sum), quiet = T))
 
 clust.ca <- ca(contingency3)
@@ -117,25 +117,29 @@ clust.ca <- ca(contingency3)
 plot(clust.ca)
 ```
 
-The two axes describe 100\% of the inertia in the cluster labels so the two-dimensional representation is perfect. The kmeans cluster labels are dispersed throughout the plot, indicating that each kmeans cluster has its own unique pattern of membership in the Ward's method cluster. The Ward's labels are similarly spread out, which shows that their members differ with respect to membership in the clusters found by kmeans. The plot shows the kmeans and Ward's method cluster labels to be neatly paired up. Thus, the two algorithms resulted in similar clusters that capture essentially the same aspects of the data.
+The two axes describe 100\% of the inertia in the cluster labels so the two-dimensional representation is perfect. The KMeans cluster labels are dispersed throughout the plot, indicating that each KMeans cluster has its own unique pattern of membership in the Ward's method cluster. The Ward's labels are similarly spread out, which shows that their members differ with respect to membership in the clusters found by KMeans. The plot shows the KMeans and Ward's method cluster labels to be neatly paired up. Thus, the two algorithms resulted in similar clusters that capture essentially the same aspects of the data.
 
 6) _In the original data set, the variable "response" is the presence (1) or absence (0) of white bark pine in each location. Make contingency tables of each of your cluster solutions with this variable, make the related side-by-side barcharts (try something like plot(tc1cluster))), and discuss whether some or all of your clusters seem to be related to the presence or absence of white bark pine._
 
 ```{r p6_a, warning=F,message=F, echo=F}
+presence.hc3 <- table("Presence" = tc1$response, "Cluster" = hc3)
+rownames(presence.hc3) <- c("Absent", "Present")
+colnames(presence.hc3) <- paste("Cluster", 1:3)
+pander(presence.hc3, caption = "White bark pine presence by Ward's method cluster")
+
+presence.kc3 <- table("Presence" = tc1$response, "Cluster" = kc3$cluster)
+rownames(presence.kc3) <- c("Absent", "Present")
+colnames(presence.kc3) <- paste("Cluster", 1:3)
+pander(presence.kc3, caption = "White bark pine presence by KMeans cluster")
+
 par(mfrow=c(1,2))
 barplot(prop.table(table(tc1$response, hc3),2), beside=T,
         xlab="Hierarchical (Ward's)", ylab = "Proportion")
 barplot(prop.table(table(tc1$response, kc3$cluster),2), beside=T,
         xlab="KMeans", ylab = "Proportion")
-
-par(mfrow=c(1,1))
 ``` 
+
 The first hierarchical cluster
-
-
-```{r p6_b, warning=F, message=F, echo=F}
-
-```  
 
 
 
