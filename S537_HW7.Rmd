@@ -140,9 +140,18 @@ plot(tc1$lat~tc1$lon, type="n", xlab="Longitude", ylab="Latitude")
 col.vec <- character(length(hc3))
 
 alpha <- 0.6
-col.vec[hc3==1] <- rgb(0, 0, 1, alpha)
-col.vec[hc3==2] <- rgb(0, 1, 1, alpha)
-col.vec[hc3==3] <- rgb(1, 0, 1, alpha)
+
+cols <- numeric(0)
+cols[1] <- rgb(0, 0, 1, alpha)
+cols[2] <- rgb(0, 1, 1, alpha)
+cols[3] <- rgb(1, 0, 1, alpha)
+
+col.vec[hc3==1] <- cols[1]
+col.vec[hc3==2] <- cols[2]
+col.vec[hc3==3] <- cols[3]
+
+# I want to plot medoids, but that can wait.
+# medoids <- rbind(median(tc1$lat[hc]))
 
 points(x=tc1$lon, y=tc1$lat, pch=20, col=col.vec)
 legend(x=-108.6, y=45, legend=1:3, pch=20,
@@ -150,6 +159,8 @@ legend(x=-108.6, y=45, legend=1:3, pch=20,
              rgb(0, 1, 1, alpha),
              rgb(1, 0, 1, alpha)))
 ```
+
+There appears to be a spatial structure to the clusters in terms of location relative to the area between latitudes 44 and 45, and between longitudes -111 and -110.  This relationship is very rough and there is a fair amount of overlap, but the points in cluster 2 mostly fall around the area centered around the aforementioned region, while the points in cluster 1 are further out than those in cluster 2 and the points in cluster 3 are almost exclusively found around the periphery.
 
 ```{r p7_b, echo=F, comment=NA, message=FALSE, fig.pos="H", fig.align="center", cache=T, size="footnotesize", fig.height=4, fig.width=10}
 
@@ -163,10 +174,15 @@ d1<-dist(t(scale(tc2)))
 d1_a<-sqrt(2*(1-(cor1))) 
 plot(as.matrix(d1)~as.matrix(d1_a))
 ```
-```{r p8_b, echo=F, comment=NA, message=FALSE, fig.pos="H", fig.align="center", cache=T, size="footnotesize"}
+
+The y values in the above plot correspond to entries in the distance matrix between scaled variables in the __tc2__ dataframe.  The x values correspond to entries in the dissimilarity matrix for the variables in the __tc2__ dataframe.  There is an essentially perfect linear relationship between these two sets of values:
+
+```{r p8_b, echo=F, comment=NA, warning=F, message=FALSE, fig.pos="H", fig.align="center", cache=T, size="footnotesize"}
 d.lm <- lm(as.vector(as.matrix(d1))~as.vector(as.matrix(d1_a)))
-summary(d.lm)
+pander(summary(d.lm))
 ```
+
+This implies that we are receiving the same information from both matrices.
 
 # R Code Appendix:
 
