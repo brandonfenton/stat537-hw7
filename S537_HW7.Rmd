@@ -80,10 +80,7 @@ ESS decreases each time the number of clusters is increased. The elbow of the pl
 
 ```{r p4_a, echo=F, comment=NA, fig.pos="H", fig.align="center", cache=T, size="footnotesize"}
 G1.k <- numeric(20)
-for(j in 1:20){
-  kcj <- kmeans(tc2.std, centers=j, iter.max=50, nstart=50)
-  G1.k[j] <- index.G1(x=tc2.std,cl=kcj$cluster)
-}
+for(j in 1:20){G1.k[j] <- index.G1(x=tc2.std,cl=kmeans(tc2.std, centers=j, iter.max=50, nstart=50)$cluster)}
 
 plot(1:20, G1.k, type = "l", ylab = "G1 Index", xlab = "Number of clusters", xaxt="n")
 axis(1, at=seq(2, 20, 2))
@@ -101,6 +98,8 @@ rownames(contingency) <- paste("kmeans Cluster", 1:3)
 pander(contingency)
 
 ```
+
+For kmeans, G1 is once again maximized by the two cluster solution.
 
 5) _Perform a correspondence analysis of the contingency table using the ca function from the ca package and discuss the results. Make sure to discuss the quality of the display and interpret all three aspects of the information provided in the plot in the context. Note: if the two solutions perfectly agree, select a different number of clusters for one of the two cluster analyses even if it isn't optimal._
 
