@@ -104,11 +104,13 @@ Several differences between the clustering methods are apparent in the contingen
 
 5) _Perform a correspondence analysis of the contingency table using the ca function from the ca package and discuss the results. Make sure to discuss the quality of the display and interpret all three aspects of the information provided in the plot in the context. Note: if the two solutions perfectly agree, select a different number of clusters for one of the two cluster analyses even if it isn't optimal._
 
+The ca function from the ca package runs into errors when used on a table with two rows or two columns, so we instead consider the three cluster solutions since we chose these based on the dendrogram and ESS plot.
+
 ```{r p5_a, echo=F, comment=NA, fig.pos="H", fig.align="center", cache=T, size="footnotesize"}
 contingency3 <- table("Kmeans" = kc3$cluster, "Ward's" = hc3)
 colnames(contingency3) <- paste("Ward Cluster", 1:3)
 rownames(contingency3) <- paste("kmeans Cluster", 1:3)
-pander(contingency3)
+pander(addmargins(contingency3, FUN = list("Total" = sum), quiet = T))
 
 clust.ca <- ca(contingency3)
 
