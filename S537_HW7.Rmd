@@ -36,8 +36,6 @@ corrplot_mg(cor1,order="hclust",tl.pos="lt")
 ```
 1 _For the standardized (Q=46) variables in the data set tc2, perform a hierarchical cluster analysis of the observations using Ward's agglomeration method and Euclidean distance. Display a dendrogram and discuss the number of clusters you might think are reasonable based on this result._
 
-
-
 ```{r p1_a, echo=F, warning=F, message=F, cache=T, fig.height=8, fig.width=8}
 # standardized?
 tc2.std <- scale(tc2)
