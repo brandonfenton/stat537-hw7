@@ -46,6 +46,7 @@ hc.wd2 <- hclust(dist(tc2.std), "ward.D2")
 
 # looks ugly even with labels suppressed.
 plot(hc.wd2, labels=F, xlab=NULL)
+rect.hclust(hc.wd2, k=3)
 ```
 
 Based on the dendrogram, we would cut the tree at a height of 150 and choose the three cluster solution. All splits lower down the tree occur relatively close together so there is little support for a larger number of clusters.
@@ -63,7 +64,7 @@ The G1 Index is maximized by the three cluster solution, agreeing with our decis
 
 3) _Now perform k-means cluster analysis on the standardized Q=46 data set and provide a plot of the ESS measure vs number of clusters for 2 to 20 clusters. Discuss the results and suggest a choice of clusters based on these results._
 
-```{r p3_a, echo=F, message=F, comment=NA, fig.pos="H", fig.align="center", cache=T, size="tiny"}
+```{r p3_a, echo=F, message=F, warning=F, comment=NA, fig.pos="H", fig.align="center", cache=T, size="tiny"}
 
 kc3 <- kmeans(tc2.std, centers=3, nstart=50)
 
@@ -81,9 +82,12 @@ axis(1, at=seq(2, 20, 2))
 
 ```{r p4_a, echo=F, comment=NA, fig.pos="H", fig.align="center", cache=T, size="footnotesize"}
 
+kc2 <- kmeans(tc2.std, centers=2, nstart=50)
+kc4 <- kmeans(tc2.std, centers=4, nstart=50)
+
 hc3 <- cutree(hc.wd2, 3)
 
-contingency <- table(hc3, kc3$cluster)
+contingency <- table(kc4$cluster, hc3)
 
 pander(contingency)
 
@@ -102,12 +106,13 @@ plot(clust.ca)
 6) _In the original data set, the variable "response" is the presence (1) or absence (0) of white bark pine in each location. Make contingency tables of each of your cluster solutions with this variable, make the related side-by-side barcharts (try something like plot(tc1cluster))), and discuss whether some or all of your clusters seem to be related to the presence or absence of white bark pine._
 
 ```{r p6_a, warning=F,message=F, echo=F}
-layout(rbind(c(1,2)))
+par(mfrow=c(1,2))
 barplot(table(tc1$response, hc3), beside=T,
         xlab="Hierarchical (Ward's)", ylab = "Frequency")
 barplot(table(tc1$response, kc3$cluster), beside=T,
         xlab="KMeans", ylab = "Frequency")
 
+par(mfrow=c(1,1))
 ``` 
 
 
@@ -121,7 +126,7 @@ barplot(table(tc1$response, kc3$cluster), beside=T,
 
 ```{r p7_a, echo=F, comment=NA, message=FALSE, fig.pos="H", fig.align="center", cache=T, size="footnotesize"}
 
-plot(tc1$lat~tc1$lon, type="n")
+plot(tc1$lat~tc1$lon, type="n", xlab="Longitude", ylab="Latitude")
 
 col.vec <- character(length(hc3))
 
@@ -131,7 +136,10 @@ col.vec[hc3==2] <- rgb(0, 1, 1, alpha)
 col.vec[hc3==3] <- rgb(1, 0, 1, alpha)
 
 points(x=tc1$lon, y=tc1$lat, pch=20, col=col.vec)
-
+legend(x=-108.6, y=45, legend=1:3, pch=20,
+       col=c(rgb(0, 0, 1, alpha),
+             rgb(0, 1, 1, alpha),
+             rgb(1, 0, 1, alpha)))
 ```
 
 ```{r p7_b, echo=F, comment=NA, message=FALSE, fig.pos="H", fig.align="center", cache=T, size="footnotesize", fig.height=4, fig.width=10}
