@@ -121,7 +121,7 @@ The two axes describe 100\% of the inertia in the cluster labels so the two-dime
 
 6) _In the original data set, the variable "response" is the presence (1) or absence (0) of white bark pine in each location. Make contingency tables of each of your cluster solutions with this variable, make the related side-by-side barcharts (try something like plot(tc1cluster))), and discuss whether some or all of your clusters seem to be related to the presence or absence of white bark pine._
 
-```{r p6_a, warning=F,message=F, echo=F}
+```{r p6_a, warning=F,message=F, echo=F, fig.height=5, fig.width=10, out.width="\\textwidth", fig.align='center'}
 presence.hc3 <- table("Presence" = tc1$response, "Cluster" = hc3)
 rownames(presence.hc3) <- c("Absent", "Present")
 colnames(presence.hc3) <- paste("Cluster", 1:3)
@@ -134,24 +134,25 @@ pander(presence.kc3, caption = "White bark pine presence by KMeans cluster")
 
 par(mfrow=c(1,2))
 barplot(prop.table(table(tc1$response, hc3),2), beside=T,
-        xlab="Hierarchical (Ward's)", ylab = "Proportion")
+        ylim = c(0, 1), xlab="Hierarchical (Ward's)", ylab = "Proportion",
+        legend.text = c("Absent", "Present"), args.legend = list(x = "top"))
 barplot(prop.table(table(tc1$response, kc3$cluster),2), beside=T,
-        xlab="KMeans", ylab = "Proportion")
+        ylim = c(0, 1), xlab="KMeans", ylab = "Proportion",
+        legend.text = c("Absent", "Present"), args.legend = list(x = "top"))
 ``` 
 
-The first hierarchical cluster
+The third hierarchical cluster and the first Kmeans cluster capture locations that have almost no white bark pine present. In the first hierarchical and second KMeans clusters, a large majority of locations have white bark pine present. The final cluster in each set has an intermediate level of white bark pine presence. Since clustering was done on temperature, precipitation, and snowpack data, these results suggest that white bark pine abundance is related to the weather.
 
-
-
+\pagebreak
 7) _Plot your preferred cluster solution spatially using latitude and longitude (in other words plot lat~lon and add symbols and colors for the sites based on the cluster IDs). Discuss whether there appears to be spatial structure to the clusters. No tests, just a visual assessment based on the plot. You could talk about where each cluster tended to be located. To help with your visual assessment, you can permute the cluster labels using something like the following applied a vector of cluster labels called v1: require(mosaic) v1p<-shuffle(v1)_
 
-```{r p7_a, echo=F, comment=NA, message=FALSE, fig.pos="H", fig.align="center", cache=T, size="footnotesize"}
+```{r p7_a, echo=F, comment=NA, message=FALSE, fig.pos="H", fig.align="center", cache=T, fig.height=7, fig.width=10}
 
 plot(tc1$lat~tc1$lon, type="n", xlab="Longitude", ylab="Latitude")
 
 col.vec <- character(length(hc3))
 
-alpha <- 0.2
+alpha <- 0.25
 
 cols <- numeric(0)
 cols[1] <- rgb(0, 0, 1, alpha)
@@ -203,24 +204,20 @@ legend(x=-108.6, y=45, legend=1:3,
 
 There appears to be a spatial structure to the clusters in terms of location relative to the area between latitudes 44 and 45, and between longitudes -111 and -110.  This relationship is very rough and there is a fair amount of overlap, but the points in cluster 2 mostly fall around the area centered around the aforementioned region, while the points in cluster 1 are further out than those in cluster 2 and the points in cluster 3 are almost exclusively found around the periphery.  This structure is apparent in the placement of each cluster's respective medoid (the points with borders are medoids, and the red point each medoid is connected to by a line segment is the corresponding centroid).
 
-```{r p7_b, echo=F, comment=NA, message=FALSE, fig.pos="H", fig.align="center", cache=T, size="footnotesize", fig.height=4, fig.width=10}
-
-```
-
+\pagebreak
 8) _Run the following code and explain the resulting plot. What is being displayed and what does it show?_ 
 
-
-```{r p8_a, echo=F, comment=NA, message=FALSE, fig.pos="H", fig.align="center", cache=T, size="footnotesize"}
+```{r p8_a, echo=F, comment=NA, message=FALSE, fig.pos="H", fig.align="center", cache=T, fig.height=7, fig.width=10}
 d1<-dist(t(scale(tc2)))
 d1_a<-sqrt(2*(1-(cor1))) 
 plot(as.matrix(d1)~as.matrix(d1_a))
 ```
 
-The y values in the above plot correspond to entries in the distance matrix between scaled variables in the __tc2__ dataframe.  The x values correspond to entries in the dissimilarity matrix for the variables in the __tc2__ dataframe.  There is an essentially perfect linear relationship between these two sets of values:
+The $y$ values in the above plot correspond to entries in the distance matrix between scaled variables in the __tc2__ dataframe.  The $x$ values correspond to the correlation-based dissimilarity for the variables in the __tc2__ dataframe.  There is an essentially perfect linear relationship between these two sets of values:
 
 ```{r p8_b, echo=F, comment=NA, warning=F, message=FALSE, fig.pos="H", fig.align="center", cache=T, size="footnotesize"}
 d.lm <- lm(as.vector(as.matrix(d1))~as.vector(as.matrix(d1_a)))
-pander(summary(d.lm))
+pander(summary(d.lm), caption = "")
 ```
 
 This implies that we are receiving the same information from both matrices.
@@ -262,8 +259,6 @@ Problem 6:
 
 Problem 7:
 ```{r a7, ref.label='p7_a', eval=F}
-```
-```{r b7, ref.label='p7_b', eval=F}
 ```
 
 Problem 8:
