@@ -49,7 +49,7 @@ plot(hc.wd2, labels=F, xlab=NULL)
 rect.hclust(hc.wd2, k=3)
 ```
 
-Based on the dendrogram, we would cut the tree at a height of 150 and choose the three cluster solution. All splits lower down the tree occur relatively close together so there is little support for a larger number of clusters.
+Based on the dendrogram, we would cut the tree at a height of 150 and choose the three cluster solution. All splits lower down the tree occur relatively close together so there is little that additional splits produce clusters that are truly different.
 
 2) _Assess the potential optimal number of clusters using the Calinski-Harabasz G1 measure (make a plot), considering 2 to 20 clusters. Discuss the results._
 ```{r p2_a, echo=F, comment=NA, fig.pos="H", fig.align="center", cache=T}
@@ -60,7 +60,7 @@ plot(1:20, G1s, type = "l", ylab = "G1 Index", xlab = "Number of clusters", xaxt
 axis(1, at=seq(2, 20, 2))
 ```
 
-The G1 Index is maximized by the two cluster solution, disagreeing with our decision based on the dendrogram. The index decreases monotonically as the number of clusters increases. The two cluster solution does the best job of maximizing between-cluster variability, but we cannot be sure that there really are clusters present because the G1 Index is undefined for one cluster.
+The G1 Index is maximized by the two cluster solution, which scores slightly higher than the three-cluster solution we chose based on the dendrogram. The index decreases monotonically as the number of clusters increases. The two cluster solution does the best job of maximizing between-cluster variability, but we cannot be sure that there really are clusters present because the G1 Index is undefined for one cluster.
 
 3) _Now perform k-means cluster analysis on the standardized Q=46 data set and provide a plot of the ESS measure vs number of clusters for 2 to 20 clusters. Discuss the results and suggest a choice of clusters based on these results._
 
@@ -79,8 +79,17 @@ ESS decreases each time the number of clusters is increased. The elbow of the pl
 
 
 ```{r p4_a, echo=F, comment=NA, fig.pos="H", fig.align="center", cache=T, size="footnotesize"}
+G1.k <- numeric(20)
+for(j in 1:20){
+  kcj <- kmeans(tc2.std, centers=j, iter.max=50, nstart=50)
+  G1.k[j] <- index.G1(x=tc2.std,cl=kcj$cluster)
+}
+
+plot(1:20, G1.k, type = "l", ylab = "G1 Index", xlab = "Number of clusters", xaxt="n")
+axis(1, at=seq(2, 20, 2))
 
 kc2 <- kmeans(tc2.std, centers=2, nstart=50)
+kc3 <- kmeans(tc2.std, centers=3, nstart=50)
 kc4 <- kmeans(tc2.std, centers=4, nstart=50)
 
 hc3 <- cutree(hc.wd2, 3)
@@ -148,10 +157,11 @@ legend(x=-108.6, y=45, legend=1:3, pch=20,
 
 
 ```{r p8_a, echo=F, comment=NA, message=FALSE, fig.pos="H", fig.align="center", cache=T, size="footnotesize"}
-d1<-dist(t(scale(tc2))) 
+d1<-dist(t(scale(tc2)))
 d1_a<-sqrt(2*(1-(cor1))) 
 plot(as.matrix(d1)~as.matrix(d1_a))
 
+d.lm <- lm(as.vector(as.matrix(d1))~as.vector(as.matrix(d1_a)))
 ```
 
 # R Code Appendix:
